@@ -6,14 +6,63 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		52021F6A304851B4007FEE8B /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52021F69304851B4007FEE8B /* AuthenticationServices.framework */; };
+		52021F74304851B4007FEE8B /* ssoe.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 52021F67304851B4007FEE8B /* ssoe.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		52C6FB70304AE73B00D5FFA3 /* jose-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 52C6FB6F304AE73B00D5FFA3 /* jose-swift */; };
+		52C6FB72304AE73B00D5FFA3 /* jose-swift-docs in Frameworks */ = {isa = PBXBuildFile; productRef = 52C6FB71304AE73B00D5FFA3 /* jose-swift-docs */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		52021F72304851B4007FEE8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52021F4D3048519B007FEE8B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52021F66304851B4007FEE8B;
+			remoteInfo = ssoe;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		52021F79304851B4007FEE8B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				52021F74304851B4007FEE8B /* ssoe.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		52021F553048519B007FEE8B /* psso-client-swiftui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "psso-client-swiftui.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52021F67304851B4007FEE8B /* ssoe.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ssoe.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		52021F69304851B4007FEE8B /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		52021F75304851B4007FEE8B /* Exceptions for "ssoe" folder in "ssoe" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 52021F66304851B4007FEE8B /* ssoe */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		52021F573048519B007FEE8B /* psso-client-swiftui */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "psso-client-swiftui";
+			sourceTree = "<group>";
+		};
+		52021F6B304851B4007FEE8B /* ssoe */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				52021F75304851B4007FEE8B /* Exceptions for "ssoe" folder in "ssoe" target */,
+			);
+			path = ssoe;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -24,6 +73,14 @@
 			files = (
 			);
 		};
+		52021F64304851B4007FEE8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				52021F6A304851B4007FEE8B /* AuthenticationServices.framework in Frameworks */,
+				52C6FB72304AE73B00D5FFA3 /* jose-swift-docs in Frameworks */,
+				52C6FB70304AE73B00D5FFA3 /* jose-swift in Frameworks */,
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -31,6 +88,8 @@
 			isa = PBXGroup;
 			children = (
 				52021F573048519B007FEE8B /* psso-client-swiftui */,
+				52021F6B304851B4007FEE8B /* ssoe */,
+				52021F68304851B4007FEE8B /* Frameworks */,
 				52021F563048519B007FEE8B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,8 +98,17 @@
 			isa = PBXGroup;
 			children = (
 				52021F553048519B007FEE8B /* psso-client-swiftui.app */,
+				52021F67304851B4007FEE8B /* ssoe.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		52021F68304851B4007FEE8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				52021F69304851B4007FEE8B /* AuthenticationServices.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -53,8 +121,12 @@
 				52021F513048519B007FEE8B /* Sources */,
 				52021F523048519B007FEE8B /* Frameworks */,
 				52021F533048519B007FEE8B /* Resources */,
+				52021F79304851B4007FEE8B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
+			);
+			dependencies = (
+				52021F73304851B4007FEE8B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				52021F573048519B007FEE8B /* psso-client-swiftui */,
@@ -63,6 +135,28 @@
 			productName = "psso-client-swiftui";
 			productReference = 52021F553048519B007FEE8B /* psso-client-swiftui.app */;
 			productType = "com.apple.product-type.application";
+		};
+		52021F66304851B4007FEE8B /* ssoe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52021F76304851B4007FEE8B /* Build configuration list for PBXNativeTarget "ssoe" */;
+			buildPhases = (
+				52021F63304851B4007FEE8B /* Sources */,
+				52021F64304851B4007FEE8B /* Frameworks */,
+				52021F65304851B4007FEE8B /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				52021F6B304851B4007FEE8B /* ssoe */,
+			);
+			name = ssoe;
+			packageProductDependencies = (
+				52C6FB6F304AE73B00D5FFA3 /* jose-swift */,
+				52C6FB71304AE73B00D5FFA3 /* jose-swift-docs */,
+			);
+			productName = ssoe;
+			productReference = 52021F67304851B4007FEE8B /* ssoe.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -77,6 +171,9 @@
 					52021F543048519B007FEE8B = {
 						CreatedOnToolsVersion = 27.0;
 					};
+					52021F66304851B4007FEE8B = {
+						CreatedOnToolsVersion = 27.0;
+					};
 				};
 			};
 			buildConfigurationList = 52021F503048519B007FEE8B /* Build configuration list for PBXProject "psso-client-swiftui" */;
@@ -88,18 +185,27 @@
 			);
 			mainGroup = 52021F4C3048519B007FEE8B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				52C6FB6E304AE73B00D5FFA3 /* XCRemoteSwiftPackageReference "jose-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 52021F563048519B007FEE8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				52021F543048519B007FEE8B /* psso-client-swiftui */,
+				52021F66304851B4007FEE8B /* ssoe */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		52021F533048519B007FEE8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		52021F65304851B4007FEE8B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -112,7 +218,20 @@
 			files = (
 			);
 		};
+		52021F63304851B4007FEE8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		52021F73304851B4007FEE8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52021F66304851B4007FEE8B /* ssoe */;
+			targetProxy = 52021F72304851B4007FEE8B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		52021F5E3048519C007FEE8B /* Debug configuration for PBXProject "psso-client-swiftui" */ = {
@@ -169,7 +288,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -227,7 +346,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -240,6 +359,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "psso-client-swiftui/psso-client-swiftui.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -254,6 +375,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muthuopensource.psso-client-swiftui";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -272,6 +394,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "psso-client-swiftui/psso-client-swiftui.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -286,6 +410,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.muthuopensource.psso-client-swiftui";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -293,6 +418,96 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		52021F77304851B4007FEE8B /* Debug configuration for PBXNativeTarget "ssoe" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 84V944P795;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ssoe/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ssoe;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.muthuopensource.psso-client-swiftui.ssoe";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		52021F78304851B4007FEE8B /* Release configuration for PBXNativeTarget "ssoe" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 84V944P795;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ssoe/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ssoe;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.muthuopensource.psso-client-swiftui.ssoe";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -318,7 +533,39 @@
 			);
 			defaultConfigurationName = Release;
 		};
+		52021F76304851B4007FEE8B /* Build configuration list for PBXNativeTarget "ssoe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52021F77304851B4007FEE8B /* Debug configuration for PBXNativeTarget "ssoe" */,
+				52021F78304851B4007FEE8B /* Release configuration for PBXNativeTarget "ssoe" */,
+			);
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		52C6FB6E304AE73B00D5FFA3 /* XCRemoteSwiftPackageReference "jose-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beatt83/jose-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		52C6FB6F304AE73B00D5FFA3 /* jose-swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C6FB6E304AE73B00D5FFA3 /* XCRemoteSwiftPackageReference "jose-swift" */;
+			productName = "jose-swift";
+		};
+		52C6FB71304AE73B00D5FFA3 /* jose-swift-docs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C6FB6E304AE73B00D5FFA3 /* XCRemoteSwiftPackageReference "jose-swift" */;
+			productName = "jose-swift-docs";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 52021F4D3048519B007FEE8B /* Project object */;
 	validationLevel = 1;
