@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  psso-client-swiftui
-//
-//  Created by test on 02/09/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {

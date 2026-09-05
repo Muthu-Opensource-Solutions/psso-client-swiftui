@@ -1,10 +1,3 @@
-//
-//  UserRegistrationView.swift
-//  ssoe
-//
-//  Created by test on 04/09/26.
-//
-
 import SwiftUI
 import WebKit
 import os

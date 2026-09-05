@@ -1,10 +1,3 @@
-//
-//  AuthenticationViewController.swift
-//  ssoe
-//
-//  Created by test on 08/08/26.
-//
-
 import Cocoa
 import AuthenticationServices
 import CryptoKit

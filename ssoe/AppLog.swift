@@ -1,10 +1,3 @@
-//
-//  AppLog.swift
-//  ssoe
-//
-//  Created by test on 04/09/26.
-//
-
 import Foundation
 @_exported import os
 
