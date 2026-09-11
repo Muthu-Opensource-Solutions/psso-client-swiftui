@@ -113,6 +113,14 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
     config.customNonceRequestValues = [URLQueryItem(name: "serialNumber", value: serial)]
     config.nonceResponseKeypath = "nonce"
     
+    if #available(macOS 27.0, *), loginManager.authenticationMethod == .openID {
+        config.federationType = .dynamicOpenID
+        config.fallbackFederationType = .dynamicOpenID
+        config.federationUserPreauthenticationURL = platformSSOURLs.openIDDiscoveryURL
+        config.authorizationURLKeypath = "authorizationURL"
+        config.customFederationUserPreauthenticationRequestValues = [URLQueryItem(name: "serialNumber", value: serial)]
+    }
+    
     do {
         try config.setCustomKeyRequestBodyClaims(["client_id" : serial])
         try config.setCustomKeyExchangeRequestBodyClaims(["client_id" : serial])
