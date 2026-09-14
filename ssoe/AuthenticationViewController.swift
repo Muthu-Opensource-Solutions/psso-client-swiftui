@@ -75,7 +75,11 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
     }
     
     func supportedGrantTypes() -> ASAuthorizationProviderExtensionSupportedGrantTypes {
-        return .password
+        if #available(macOS 27.0, *) {
+            return [.password,.tokenExchange]
+        } else {
+            return .password
+        }
     }
     
     func protocolVersion() -> ASAuthorizationProviderExtensionPlatformSSOProtocolVersion {
@@ -122,7 +126,23 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
     }
     
     func beginUserRegistration(loginManager: ASAuthorizationProviderExtensionLoginManager, userName: String?, method authenticationMethod: ASAuthorizationProviderExtensionAuthenticationMethod, options: ASAuthorizationProviderExtensionRequestOptions = [], completion: @escaping @Sendable (ASAuthorizationProviderExtensionRegistrationResult) -> Void) {
-        AppLog.userRegistration.info("Starting user registration flow. userName: \(userName ?? "none", privacy: .public), method: \(authenticationMethod.rawValue)")
+        AppLog.userRegistration.info("Starting user registration flow. userName: \(userName ?? "none"), method: \(authenticationMethod.rawValue)")
+        
+        
+        // Save User Login Configuration only on macOS 27.0+ and when using OpenID
+        if #available(macOS 27.0, *), loginManager.authenticationMethod == .openID {
+            let loginUserName = userName ?? ""
+            let userLoginConfiguration = ASAuthorizationProviderExtensionUserLoginConfiguration(loginUserName: loginUserName)
+            do {
+                try loginManager.saveUserLoginConfiguration(userLoginConfiguration)
+                AppLog.userRegistration.info("Saved UserLoginConfiguration successfully for: \(loginUserName, privacy: .public)")
+                completion(.success)
+            } catch {
+                AppLog.userRegistration.error("Error saving UserLoginConfiguration: \(error.localizedDescription, privacy: .public)")
+                completion(.failed)
+            }
+            return
+        }
 
         guard let domainFQDN = loginManager.extensionData["DOMAIN_FQDN"] as? String else {
             AppLog.userRegistration.error("User registration failed: Missing DOMAIN_FQDN in extensionData")
@@ -335,4 +355,3 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
     }
 
 }
-

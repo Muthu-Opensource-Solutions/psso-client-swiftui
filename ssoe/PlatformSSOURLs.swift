@@ -42,4 +42,8 @@ public struct PlatformSSOURLs {
     public var userRegistrationDiscoveryURL: URL {
         return resolveURL(path: "/oidc/authCode/discovery")
     }
+    
+    public var openIDDiscoveryURL : URL {
+        return resolveURL(path: "/oidc/webAuth/discovery")
+    }
 }
