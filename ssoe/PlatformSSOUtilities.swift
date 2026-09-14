@@ -49,6 +49,13 @@ enum JWKError: Error {
     case exportFailed
 }
 
+/// Represents the Platform SSO authentication type used in custom login requests.
+/// Backed by String raw values that are sent under the key "psso_type".
+enum PlatformSSOType: String {
+    case openID = "openID"
+    case password = "urn:ietf:params:oauth:grant-type:token-exchange"
+}
+
 // Extract JWK x, y (base64url) and kid (base64url(sha256(x9.63))) from an EC P-256 public key
 func extractJWKComponents(from publicKey: SecKey) throws -> (x: String, y: String, kid: String) {
     guard let x963Data = SecKeyCopyExternalRepresentation(publicKey, nil) as Data? else {
@@ -99,10 +106,16 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
                                                                     jwksEndpointURL: platformSSOURLs.jwksURL,
                                                                     audience: Optional(serial))
     
+    //refering PSSO Authentication Type to be used below
+    let pssoType : PlatformSSOType
+    if #available(macOS 27.0, *), loginManager.authenticationMethod == .openID {
+        pssoType = .openID
+    } else{
+        pssoType = .password
+    }
+    
     if let displayName = loginManager.extensionData["accountDisplayName"] as? String {
         config.accountDisplayName = displayName
-    } else {
-        config.accountDisplayName = "Single Sign-On"
     }
     
     //setting Endpoint URLs
@@ -113,10 +126,15 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
     config.customNonceRequestValues = [URLQueryItem(name: "serialNumber", value: serial)]
     config.nonceResponseKeypath = "nonce"
     
+    //setting Refresh Request URLs
+    config.refreshEndpointURL = platformSSOURLs.refreshURL
+    
     do {
+        //setting Custom Body Claims for ( Key Requst, Key Exchange, Refresh )
         try config.setCustomKeyRequestBodyClaims(["client_id" : serial])
         try config.setCustomKeyExchangeRequestBodyClaims(["client_id" : serial])
-        AppLog.loginConfig.debug("Added custom key request body claims to LoginConfiguration")
+        try config.setCustomRefreshRequestBodyClaims(["client_id":serial,"psso_type": pssoType.rawValue])
+        AppLog.loginConfig.debug("Added custom request body claims to LoginConfiguration for Key Requst, Key Exchange, Refresh")
     } catch {
         AppLog.loginConfig.error("Error setting custom key claims on LoginConfiguration: \(error.localizedDescription, privacy: .public)")
     }
