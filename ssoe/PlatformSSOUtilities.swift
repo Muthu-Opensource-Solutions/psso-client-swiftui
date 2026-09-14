@@ -128,6 +128,15 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
     
     //setting Refresh Request URLs
     config.refreshEndpointURL = platformSSOURLs.refreshURL
+  
+    //setting dynamic OpenID if AuthenitcationMethod is set to openID
+    if #available(macOS 27.0, *), pssoType == .openID {
+        config.federationType = .dynamicOpenID
+        config.fallbackFederationType = .dynamicOpenID
+        config.federationUserPreauthenticationURL = platformSSOURLs.openIDDiscoveryURL
+        config.authorizationURLKeypath = "authorizationURL"
+        config.customFederationUserPreauthenticationRequestValues = [URLQueryItem(name: "serialNumber", value: serial)]
+    }
     
     do {
         //setting Custom Body Claims for ( Key Requst, Key Exchange, Refresh )
