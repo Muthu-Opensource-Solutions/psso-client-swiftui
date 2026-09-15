@@ -140,13 +140,88 @@ Deploy a configuration profile (`.mobileconfig`) containing the **Extensible Sin
 - **`EnableCreateUserAtLogin`**: Set to **`true`** or **`false`** based on your organization's preference for provisioning new local accounts directly from the login window.
 - **`mode=managed` (Internal Networks)**: If your domain is hosted on an internal corporate network/intranet and cannot be reached by Apple's public CDN servers, configure `authsrv:<DOMAIN_FQDN>?mode=managed` and ensure `<key>EnableDirectDownloads</key><true/>` is present. This instructs macOS to download the association file directly from your server. *(Details on serving `apple-app-site-association` are documented in the [server repository](https://github.com/Muthu-Opensource-Solutions/psso-idp-proxy-server-java)).*
 
+## 3. Visual Walkthrough (Admin & User Experience)
+
+Below is the complete enrollment and synchronization lifecycle experienced by IT administrators and end users:
+
+### 1) Device Registration
+
+When the MDM configuration profile is pushed, macOS initiates device registration with the Platform SSO extension:
+
+<p align="center">
+  <img src="docs/images/device-registration-1.png" alt="Device Registration Notification" width="600" />
+</p>
+
+The user is prompted to register the Mac with the enterprise identity platform:
+
+<p align="center">
+  <img src="docs/images/device-registration-2.png" alt="Device Registration Prompt" width="480" />
+</p>
+
+The device hardware keys and identity are verified:
+
+<p align="center">
+  <img src="docs/images/device-registration-3.png" alt="Device Registration Details" width="480" />
+</p>
+
 ---
 
-## 3. Password Synchronization
+### 2) User Registration
 
-Once enrolled:
+The user signs in to link their local macOS account with their Identity Provider (IdP) account:
+
+<p align="center">
+  <img src="docs/images/user-registration-1.png" alt="User Registration Welcome" width="600" />
+</p>
+
+The user provides their IdP credentials for authentication:
+
+<p align="center">
+  <img src="docs/images/user-registration-2.png" alt="User Registration Credentials" width="480" />
+</p>
+
+---
+
+### 3) Key Exchange
+
+The client performs secure, hardware-bound cryptographic key exchange with the companion proxy server:
+
+<p align="center">
+  <img src="docs/images/key-exchange.png" alt="Key Exchange" width="480" />
+</p>
+
+---
+
+### 4) Completion
+
+Registration completes successfully, binding the user and device to the Platform SSO extension:
+
+<p align="center">
+  <img src="docs/images/completion.png" alt="Registration Completion" width="480" />
+</p>
+
+---
+
+### 5) Password Sync
+
+Password synchronization is now active between the Identity Provider and the local macOS account:
+
+<p align="center">
+  <img src="docs/images/password-sync.png" alt="Password Synchronization Notification" width="600" />
+</p>
+
 - The user's Identity Provider (IdP) password is synchronized to their local macOS user account.
-- If the user changes their password in the IdP, they can seamlessly sync the new password to their Mac by simply entering the **new IdP password at the macOS login window**. PSSO verifies the new password against the IdP via the proxy server and updates the local account password.
+- If the user changes their password in the IdP, they can seamlessly sync the new password to their Mac by entering the **new IdP password at the macOS login window**. PSSO verifies the new password against the IdP via the proxy server and updates the local account password.
+
+---
+
+### 6) Users & Groups Pane
+
+In **System Settings > Users & Groups**, the local user account shows the active Platform SSO badge and enrollment status:
+
+<p align="center">
+  <img src="docs/images/users-groups-pane.png" alt="Users and Groups Pane" width="500" />
+</p>
 
 ---
 
