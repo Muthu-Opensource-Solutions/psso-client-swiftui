@@ -3,7 +3,9 @@
 - Prominent Identity Providers like Okta, Microsoft EntraID, Ping Identity Provides Support for Apple's Platform SSO Framework which supports Password Authentication Method to Sync the Password to macOS Local Account
 
 
-- **`psso-client-swiftui`** is a native macOS client application and Platform SSO Extension implementing Apple's **Password Authentication Type**. to provide **Local Account Password Synchronization** with any OIDC Providers that Supports Resource Owner Password Grant `grant_type`. This Project can be utilized with Identity Providers that have not supported PSSO Still and have no other tools for Syncing Password to macOS Local Account ( Eg: Auth0, Onelogin, AWS Cognito etc.,)
+- **`psso-client-swiftui`** is a native macOS client application and Platform SSO Extension implementing Apple's **Password Authentication Type**. that provides **Local Account Password Synchronization** with any OIDC Providers that Supports Resource Owner Password Grant `grant_type`. 
+
+- This Project can be utilized with Identity Providers that have not supported PSSO Still and have no other tools for Syncing Password to macOS Local Account ( Eg: Auth0, Onelogin, AWS Cognito etc.,)
 
 This repository works in conjunction with the companion proxy server:  
 👉 [psso-idp-proxy-server-java](https://github.com/Muthu-Opensource-Solutions/psso-idp-proxy-server-java)
@@ -144,8 +146,7 @@ Deploy a configuration profile (`.mobileconfig`) containing the **Extensible Sin
 
 Once enrolled:
 - The user's Identity Provider (IdP) password is synchronized to their local macOS user account.
-- If the user changes their password in the IdP, they can seamlessly sync the new password to their Mac by simply entering the **new IdP password at the macOS login window**.
-- The Apple Platform SSO framework verifies the new password against the IdP via the proxy server and automatically updates the local account password.
+- If the user changes their password in the IdP, they can seamlessly sync the new password to their Mac by simply entering the **new IdP password at the macOS login window**. PSSO verifies the new password against the IdP via the proxy server and updates the local account password.
 
 ---
 
