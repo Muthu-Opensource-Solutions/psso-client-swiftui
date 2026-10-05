@@ -8,59 +8,18 @@ import SwiftUI
 import os
 
 class AuthenticationViewController: NSViewController {
-    // Strong reference to keep registration window alive during interactive flow
-    private var registrationWindowController: NSWindowController?
 
     var authorizationRequest: ASAuthorizationProviderExtensionAuthorizationRequest?
 
     override func loadView() {
-        super.loadView()
-        // Do any additional setup after loading the view.
+        self.view = NSView()
+        self.view.autoresizingMask = [.width, .height]
+        self.preferredContentSize = NSSize(width: 760, height: 560)
+        self.title = "Sign In"
     }
 
     override var nibName: NSNib.Name? {
-        return NSNib.Name("AuthenticationViewController")
-    }
-}
-
-final class RegistrationWindowController: NSWindowController, NSWindowDelegate {
-    var onCancel: (() -> Void)?
-
-    init(rootView: some View, title: String = "Sign in", onCancel: (() -> Void)? = nil) {
-        self.onCancel = onCancel
-        let hostingController = NSHostingController(rootView: rootView)
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 900, height: 700),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
-            backing: .buffered,
-            defer: false
-        )
-        window.title = title
-        super.init(window: window)
-        window.delegate = self
-        self.contentViewController = hostingController
-    }
-
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
-    func centerOnScreen() {
-        guard let window = self.window else { return }
-        let targetScreen = NSScreen.main ?? NSScreen.screens.first
-        if let screen = targetScreen {
-            let screenFrame = screen.visibleFrame
-            let windowWidth: CGFloat = 900
-            let windowHeight: CGFloat = 700
-            let originX = screenFrame.origin.x + (screenFrame.width - windowWidth) / 2.0
-            let originY = screenFrame.origin.y + (screenFrame.height - windowHeight) / 2.0
-            window.setFrame(NSRect(x: originX, y: originY, width: windowWidth, height: windowHeight), display: true)
-        } else {
-            window.center()
-        }
-    }
-
-    func windowWillClose(_ notification: Notification) {
-        onCancel?()
-        onCancel = nil
+        return nil
     }
 }
 
@@ -150,77 +109,97 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
             return
         }
         let discoveryURL = PlatformSSOURLs(domainName: domainFQDN).userRegistrationDiscoveryURL
-        let title = (loginManager.extensionData["accountDisplayName"] as? String) ?? "Sign in"
 
-        let registrationView = UserRegistrationView(
-            discoveryURL: discoveryURL,
-            onResult: { [weak self] result in
-                DispatchQueue.main.async {
-                    self?.dismissRegistrationWindow()
-                }
-
-                switch result {
-                case .success(let encodedResult):
-                    AppLog.userRegistration.info("OIDC callback received, extracting user identity")
-                    guard let userIdentifier = self?.extractUserIdentifier(from: encodedResult) else {
-                        AppLog.userRegistration.error("Failed to extract user email/identity from OIDC callback token")
-                        completion(.failed)
-                        return
-                    }
-
-                    let config = ASAuthorizationProviderExtensionUserLoginConfiguration(loginUserName: userIdentifier)
-                    do {
-                        try loginManager.saveUserLoginConfiguration(config)
-                        AppLog.userRegistration.info("Saved UserLoginConfiguration successfully for: \(userIdentifier, privacy: .public)")
-                        completion(.success)
-                    } catch {
-                        AppLog.userRegistration.error("Error saving UserLoginConfiguration: \(error.localizedDescription, privacy: .public)")
-                        completion(.failed)
-                    }
-
-                case .failure(let error):
-                    AppLog.userRegistration.error("User registration failed: \(error.localizedDescription, privacy: .public)")
-                    completion(.failed)
-                }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                completion(.failed)
+                return
             }
-        )
 
-        DispatchQueue.main.async {
-            self.presentRegistrationWindow(
-                rootView: registrationView,
-                title: title,
+            let registrationView = UserRegistrationView(
+                discoveryURL: discoveryURL,
+                onResult: { result in
+                    DispatchQueue.main.async {
+                        self.clearRegistrationView()
+                    }
+
+                    switch result {
+                    case .success(let encodedResult):
+                        AppLog.userRegistration.info("OIDC callback received, extracting user identity")
+                        guard let userIdentifier = self.extractUserIdentifier(from: encodedResult) else {
+                            AppLog.userRegistration.error("Failed to extract user email/identity from OIDC callback token")
+                            completion(.failed)
+                            return
+                        }
+
+                        let config = ASAuthorizationProviderExtensionUserLoginConfiguration(loginUserName: userIdentifier)
+                        do {
+                            try loginManager.saveUserLoginConfiguration(config)
+                            AppLog.userRegistration.info("Saved UserLoginConfiguration successfully for: \(userIdentifier, privacy: .public)")
+                            completion(.success)
+                        } catch {
+                            AppLog.userRegistration.error("Error saving UserLoginConfiguration: \(error.localizedDescription, privacy: .public)")
+                            completion(.failed)
+                        }
+
+                    case .failure(let error):
+                        AppLog.userRegistration.error("User registration failed: \(error.localizedDescription, privacy: .public)")
+                        completion(.failed)
+                    }
+                },
                 onCancel: {
-                    AppLog.userRegistration.notice("User registration cancelled: window closed by user")
+                    DispatchQueue.main.async {
+                        self.clearRegistrationView()
+                    }
+                    AppLog.userRegistration.info("User registration cancelled by user action")
                     completion(.failed)
                 }
             )
+
+            // Mount the registration SwiftUI view inside self.view
+            self.presentRegistrationView(rootView: registrationView)
+
+            // Request Platform SSO (AppSSOAgent / Setup Assistant) to display the view controller
+            loginManager.presentRegistrationViewController { error in
+                if let error = error {
+                    AppLog.userRegistration.error("Failed to present registration view controller: \(error.localizedDescription, privacy: .public)")
+                    completion(.failed)
+                } else {
+                    AppLog.userRegistration.info("Platform SSO successfully presented registration view controller on screen")
+                }
+            }
         }
     }
 
-    // MARK: - Registration Window Presentation Helpers
+    // MARK: - Registration View Presentation Helpers
 
-    private func presentRegistrationWindow(rootView: some View, title: String, onCancel: @escaping () -> Void) {
-        dismissRegistrationWindow()
-        AppLog.userRegistration.info("Presenting user registration window: '\(title, privacy: .public)'")
-        let wc = RegistrationWindowController(rootView: rootView, title: title, onCancel: onCancel)
-        self.registrationWindowController = wc
-        wc.centerOnScreen()
-        wc.showWindow(nil)
-        wc.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+    private func presentRegistrationView(rootView: some View) {
+        clearRegistrationView()
+        AppLog.userRegistration.info("Presenting user registration view in extension view controller")
+        
+        let hostingView = NSHostingView(rootView: rootView)
+        hostingView.translatesAutoresizingMaskIntoConstraints = false
+        hostingView.autoresizingMask = [.width, .height]
+        
+        self.preferredContentSize = NSSize(width: 760, height: 560)
+        self.view.addSubview(hostingView)
+        
+        NSLayoutConstraint.activate([
+            hostingView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            hostingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            hostingView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            hostingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+        ])
     }
 
-    private func dismissRegistrationWindow() {
-        if let wc = self.registrationWindowController as? RegistrationWindowController {
-            wc.onCancel = nil // Prevent firing cancellation when dismissing after success
-        }
-        AppLog.userRegistration.debug("Dismissing user registration window")
-        self.registrationWindowController?.close()
-        self.registrationWindowController = nil
+    private func clearRegistrationView() {
+        AppLog.userRegistration.debug("Clearing user registration view controller subviews")
+        self.view.subviews.forEach { $0.removeFromSuperview() }
     }
 
     private func extractUserIdentifier(from base64EncodedResult: String) -> String? {
-        guard let data = Data(base64Encoded: base64EncodedResult),
+        let cleanedResult = base64EncodedResult.removingPercentEncoding ?? base64EncodedResult
+        guard let data = Data(base64Encoded: cleanedResult) ?? Data(base64Encoded: base64EncodedResult),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let email = (json["email"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty else {
