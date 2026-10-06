@@ -85,8 +85,7 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
     }
     
     func beginUserRegistration(loginManager: ASAuthorizationProviderExtensionLoginManager, userName: String?, method authenticationMethod: ASAuthorizationProviderExtensionAuthenticationMethod, options: ASAuthorizationProviderExtensionRequestOptions = [], completion: @escaping @Sendable (ASAuthorizationProviderExtensionRegistrationResult) -> Void) {
-        AppLog.userRegistration.info("Starting user registration flow. userName: \(userName ?? "none"), method: \(authenticationMethod.rawValue)")
-        
+        AppLog.userRegistration.info("Starting user registration flow. userName: \(userName ?? "none"), method: \(authenticationMethod.rawValue), options: \(options.rawValue)")
         
         // Save User Login Configuration only on macOS 27.0+ and when using OpenID
         if #available(macOS 27.0, *), loginManager.authenticationMethod == .openID {
@@ -100,6 +99,15 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
                 AppLog.userRegistration.error("Error saving UserLoginConfiguration: \(error.localizedDescription, privacy: .public)")
                 completion(.failed)
             }
+            return
+        }
+
+        // When presenting interactive UI (such as in Setup Assistant or background evaluation),
+        // check whether user interaction is permitted. If not permitted yet, return .userInterfaceRequired
+        // so that macOS / Setup Assistant presents the interactive pane and invokes us with user interaction enabled.
+        if !options.contains(.userInteractionEnabled) {
+            AppLog.userRegistration.info("User interaction not currently enabled (options: \(options.rawValue)). Returning userInterfaceRequired to request UI presentation.")
+            completion(.userInterfaceRequired)
             return
         }
 
