@@ -52,8 +52,8 @@ enum JWKError: Error {
 /// Represents the Platform SSO authentication type used in custom login requests.
 /// Backed by String raw values that are sent under the key "psso_type".
 enum PlatformSSOType: String {
-    case openID = "openID"
-    case password = "urn:ietf:params:oauth:grant-type:token-exchange"
+    case openID = "urn:ietf:params:oauth:grant-type:token-exchange"
+    case password = "password";
 }
 
 // Extract JWK x, y (base64url) and kid (base64url(sha256(x9.63))) from an EC P-256 public key
