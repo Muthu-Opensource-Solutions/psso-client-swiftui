@@ -1,0 +1,9 @@
+{
+  "id" : "f76c1465-d737-401e-a9ef-00cc6940a595",
+  "targets" : [
+    {
+      "id" : "735a0546-4d79-4cd5-a685-9e471ba0d02a",
+      "name" : "psso-client-swiftui"
+    }
+  ]
+}

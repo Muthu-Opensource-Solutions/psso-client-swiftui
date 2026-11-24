@@ -87,13 +87,13 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
     func beginUserRegistration(loginManager: ASAuthorizationProviderExtensionLoginManager, userName: String?, method authenticationMethod: ASAuthorizationProviderExtensionAuthenticationMethod, options: ASAuthorizationProviderExtensionRequestOptions = [], completion: @escaping @Sendable (ASAuthorizationProviderExtensionRegistrationResult) -> Void) {
         AppLog.userRegistration.info("Starting user registration flow. userName: \(userName ?? "none"), method: \(authenticationMethod.rawValue), options: \(options.rawValue)")
         
-        // Save User Login Configuration only on macOS 27.0+ and when using OpenID
-        if #available(macOS 27.0, *), loginManager.authenticationMethod == .openID {
-            let loginUserName = userName ?? ""
-            let userLoginConfiguration = ASAuthorizationProviderExtensionUserLoginConfiguration(loginUserName: loginUserName)
+        // If userName is present and non-empty, directly register the user by saving UserLoginConfiguration
+        // for both OpenID and Password authentication methods without presenting interactive OAuth UI.
+        if let trimmedUserName = userName?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmedUserName.isEmpty {
+            let userLoginConfiguration = ASAuthorizationProviderExtensionUserLoginConfiguration(loginUserName: trimmedUserName)
             do {
                 try loginManager.saveUserLoginConfiguration(userLoginConfiguration)
-                AppLog.userRegistration.info("Saved UserLoginConfiguration successfully for: \(loginUserName, privacy: .public)")
+                AppLog.userRegistration.info("Saved UserLoginConfiguration successfully for: \(trimmedUserName, privacy: .public)")
                 completion(.success)
             } catch {
                 AppLog.userRegistration.error("Error saving UserLoginConfiguration: \(error.localizedDescription, privacy: .public)")
@@ -102,6 +102,7 @@ extension AuthenticationViewController : ASAuthorizationProviderExtensionRegistr
             return
         }
 
+        // If userName is empty or nil, perform interactive OAuth user registration for both OpenID and Password methods.
         // When presenting interactive UI (such as in Setup Assistant or background evaluation),
         // check whether user interaction is permitted. If not permitted yet, return .userInterfaceRequired
         // so that macOS / Setup Assistant presents the interactive pane and invokes us with user interaction enabled.
