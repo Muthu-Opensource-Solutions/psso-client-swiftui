@@ -42,9 +42,6 @@ public struct PlatformSSOURLs {
         return resolveURL(path: "/psso/key")
     }
     
-    public var refreshURL: URL {
-        return resolveURL(path: "/psso/refresh")
-    }
     
     public var userRegistrationDiscoveryURL: URL {
         return resolveURL(path: "/oidc/authCode/discovery")

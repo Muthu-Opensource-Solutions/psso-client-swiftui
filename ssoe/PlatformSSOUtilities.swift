@@ -125,9 +125,6 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
     //setting Custom values for Nonce Endpoint
     config.customNonceRequestValues = [URLQueryItem(name: "serialNumber", value: serial)]
     config.nonceResponseKeypath = "nonce"
-    
-    //setting Refresh Request URLs
-    config.refreshEndpointURL = platformSSOURLs.refreshURL
   
     //setting OpenID if AuthenitcationMethod is set to openID
     if #available(macOS 27.0, *), pssoType == .openID {
@@ -136,11 +133,10 @@ func getLoginConfiguration(loginManager: ASAuthorizationProviderExtensionLoginMa
     }
     
     do {
-        //setting Custom Body Claims for ( Key Requst, Key Exchange, Refresh )
+        //setting Custom Body Claims for ( Key Requst, Key Exchange )
         try config.setCustomKeyRequestBodyClaims(["client_id" : serial])
         try config.setCustomKeyExchangeRequestBodyClaims(["client_id" : serial])
-        try config.setCustomRefreshRequestBodyClaims(["client_id":serial,"psso_type": pssoType.rawValue])
-        AppLog.loginConfig.debug("Added custom request body claims to LoginConfiguration for Key Requst, Key Exchange, Refresh")
+        AppLog.loginConfig.debug("Added custom request body claims to LoginConfiguration for Key Requst, Key Exchange")
     } catch {
         AppLog.loginConfig.error("Error setting custom key claims on LoginConfiguration: \(error.localizedDescription, privacy: .public)")
     }
